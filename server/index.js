@@ -65,7 +65,7 @@ function lanAddress() {
   return null;
 }
 
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   const lan = lanAddress();
   console.log('');
   console.log('  PathView server 已启动');
@@ -73,4 +73,23 @@ app.listen(PORT, '0.0.0.0', () => {
   if (lan) console.log(`  局域网  http://${lan}:${PORT}`);
   console.log(`  前端静态资源  ${hasDist ? '已托管 (client/dist)' : '未构建 (开发模式请另起 vite)'}`);
   console.log('');
+});
+
+/* 端口被占用时给出人话提示。否则 node --watch 会不停刷 EADDRINUSE 堆栈，
+   看起来像代码崩了，实际只是端口冲突。 */
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error('');
+    console.error(`  [pathview] 启动失败：端口 ${PORT} 已被占用`);
+    console.error('  可能已有一个实例在运行，或换一个端口：');
+    console.error(`    PORT=3002 npm start        # Linux / macOS / Git Bash`);
+    console.error(`    $env:PORT=3002; npm start  # PowerShell`);
+    console.error('');
+    process.exit(1);
+  }
+  if (err.code === 'EACCES') {
+    console.error(`\n  [pathview] 启动失败：没有权限监听端口 ${PORT}（1024 以下端口需要管理员/root）\n`);
+    process.exit(1);
+  }
+  throw err;
 });
