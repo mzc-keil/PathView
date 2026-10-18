@@ -1,0 +1,53 @@
+# /etc/systemd/system/pathview.service
+#
+# 裸机部署用：由 systemd 托管，开机自启、崩溃自动重启。
+# 安装步骤见 DEPLOY.md「方案 B」。改完记得 `systemctl daemon-reload`。
+
+[Unit]
+Description=PathView 焊接轨迹可视化与校验服务
+After=network-online.target
+Wants=network-online.target
+# 连续 5 次 60 秒内启动失败就放弃，避免死循环刷日志
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+
+# ---- 运行身份 ----
+User=pathview
+Group=pathview
+
+# ---- 路径 ----
+WorkingDirectory=/opt/pathview
+# 数据目录放在代码目录之外：升级代码不会碰到数据库
+Environment=NODE_ENV=production
+Environment=PORT=3001
+Environment=PV_DATA_DIR=/var/lib/pathview
+Environment=TZ=Asia/Shanghai
+
+ExecStart=/usr/bin/node /opt/pathview/server/index.js
+
+# ---- 进程管理 ----
+Restart=always
+RestartSec=3
+
+# ---- 日志（journalctl -u pathview -f） ----
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pathview
+
+# ---- 安全加固 ----
+# 整个文件系统只读，仅放行数据目录 —— 这正是把数据挪到 /var/lib 的意义。
+ProtectSystem=strict
+ReadWritePaths=/var/lib/pathview
+ProtectHome=true
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

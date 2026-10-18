@@ -1,0 +1,19 @@
+{
+  "name": "pathview",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PathView - 焊接轨迹离线可视化与校验工具",
+  "scripts": {
+    "setup": "npm run install:all && npm run build",
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently -n server,client -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start",
+    "typecheck": "npm --prefix client run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "pathview-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "chardet": "^2.2.0",
+    "cors": "^2.8.6",
+    "express": "^4.22.3",
+    "iconv-lite": "^0.7.3",
+    "multer": "^2.4.0"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
+}

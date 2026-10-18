@@ -1,0 +1,31 @@
+# 依赖
+node_modules/
+**/node_modules/
+
+# 构建产物
+client/dist/
+
+# 运行数据：SQLite 库 + 上传暂存（绝不入库，靠备份/卷持久化）
+server/data/
+*.db
+*.db-shm
+*.db-wal
+
+# 临时与调试
+.tmp/
+*.log
+npm-debug.log*
+
+# 环境变量（含密钥，勿提交）
+.env
+.env.local
+.env.*.local
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# WorkBuddy 会话数据（AI 协作内部笔记，不入库）
+.workbuddy/

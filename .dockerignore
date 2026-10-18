@@ -1,0 +1,15 @@
+# 构建上下文瘦身：这些目录一律不进镜像
+# （用 tar 打包部署文件时同样参考这份清单）
+node_modules
+**/node_modules
+client/dist
+server/data
+.tmp
+.git
+.workbuddy
+*.md
+!README.md
+.env
+.env.*
+npm-debug.log*
+**/.DS_Store
